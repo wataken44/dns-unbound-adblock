@@ -53,20 +53,23 @@ def read_blacklist_domains(filename, whitelist):
     return d
 
 
-def uniqify(domains):
+def uniqify(src):
     dup = []
 
-    for y in range(len(domains)):
-        for x in range(len(domains)):
+    for y in range(len(src)):
+        for x in range(len(src)):
             if y == x:
                 continue
-            if domains[y].endswith(domains[x]):
-                dup.append(domains[y])
+            if src[y].endswith(src[x]):
+                dup.append(src[y])
+
+    dup = sorted(list(set(dup)))
+    ret = sorted(list(set(src)))
 
     for d in dup:
-        domains.remove(d)
+        ret.remove(d)
 
-    return sorted(list(set(domains)))
+    return sorted(list(set(ret)))
 
 
 def main():

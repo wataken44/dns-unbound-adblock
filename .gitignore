@@ -1,6 +1,6 @@
 
 output/*.conf
-whiltelist/*.txt
+whitelist/*.txt
 blacklist/*.txt
 
 # Byte-compiled / optimized / DLL files
