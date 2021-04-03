@@ -13,8 +13,8 @@ import re
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)) + "/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) "}
-WHITELIST_OUTPUT = "whitelist/adaway.txt"
-BLACKLIST_OUTPUT = "blacklist/adaway.txt"
+WHITELIST_OUTPUT = "whitelist/logroid-hosts.txt"
+BLACKLIST_OUTPUT = "blacklist/logroid-hosts.txt"
 URL = "https://logroid.github.io/adaway-hosts/hosts.txt"
 
 

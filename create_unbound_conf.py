@@ -6,6 +6,7 @@
 
 """
 
+import collections
 import glob
 import os
 import re
@@ -53,26 +54,44 @@ def read_blacklist_domains(filename, whitelist):
     return d
 
 
-def uniqify(src):
-    dup = []
+def uniqify(src, whitelist):
 
-    for y in range(len(src)):
-        for x in range(len(src)):
-            if y == x:
-                continue
-            if src[y].endswith(src[x]):
-                dup.append(src[y])
+    tree = Tree()
 
-    dup = sorted(list(set(dup)))
-    ret = sorted(list(set(src)))
+    for d in src:
+        tree.add_domain(d)
 
-    for d in dup:
-        ret.remove(d)
+    # do wfs
+    queue = collections.deque()
+    for k, v in tree.get_root().get_children().items():
+        queue.append(v)
+
+    domains = []
+    while len(queue) > 0:
+        leaf = queue.popleft()
+
+        if None in leaf.get_children():
+            domains.append(leaf.get_domain())
+        else:
+            for k, v in leaf.get_children().items():
+                queue.append(v)
+
+    ret = []
+
+    for d in domains:
+        ok = False
+        for w in whitelist:
+            if w.search(d):
+                ok = True
+        if ok:
+            continue
+        ret.append(d)
 
     return sorted(list(set(ret)))
 
 
 def main():
+
     os.chdir(BASE_DIR)
 
     whitelist = []
@@ -85,9 +104,76 @@ def main():
 
     fp = open("output/blacklist.conf", "w")
     fp.write("server:\n")
-    for domain in uniqify(blacklist):
+    for domain in uniqify(blacklist, whitelist):
         fp.write('    local-zone: "%s." static' % domain + "\n")
     fp.close()
+
+
+def test():
+    tree = Tree()
+    tree.add_domain("www.youtube.com")
+    tree.add_domain("youtube.com")
+    tree.add_domain("google.com")
+    tree.add_domain("ipv6.google.com")
+    tree.add_domain("www.yahoo.co.jp")
+    tree.add_domain("www.goo.ne.jp")
+    tree.dump()
+
+    return
+
+
+class Tree:
+    def __init__(self):
+        self._root = Leaf("", "")
+
+    def add_domain(self, domain):
+        arr = reversed(domain.split("."))
+
+        d = ""
+        ptr = self._root
+        for s in arr:
+            if d != "":
+                d = "." + d
+            d = s + d
+            ptr.add_child(d, s)
+            ptr = ptr.get_child(s)
+
+        ptr.add_child(d, None)
+
+    def get_root(self):
+        return self._root
+
+    def dump(self):
+        self._root.dump()
+
+
+class Leaf:
+    def __init__(self, domain, subdomain):
+        self._domain = domain
+        self._subdomain = subdomain
+        self._children = {}
+
+    def add_child(self, domain, subdomain):
+        if subdomain not in self._children:
+            self._children[subdomain] = Leaf(domain, subdomain)
+
+    def get_child(self, subdomain):
+        if subdomain in self._children:
+            return self._children[subdomain]
+
+        return None
+
+    def get_children(self):
+        return self._children
+
+    def get_domain(self):
+        return self._domain
+
+    def dump(self, depth=0):
+        print("  " * depth + str(self._subdomain) + " => " + str(self._domain))
+
+        for k, v in self._children.items():
+            v.dump(depth + 1)
 
 
 if __name__ == "__main__":
