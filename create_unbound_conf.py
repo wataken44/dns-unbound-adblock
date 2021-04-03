@@ -48,7 +48,7 @@ def read_blacklist_domains(filename, whitelist):
                 ok = True
         if ok:
             continue
-        d.append(s)
+        d.append(s.lower())
 
     fp.close()
     return d
