@@ -39,7 +39,13 @@ def main():
             continue
 
         fp = open(OUTPUT, "w")
-        fp.write(res.read().decode("utf_8_sig"))
+
+        for line in res:
+            s = line.decode("utf_8_sig").strip()
+            if len(s) == 0 or s[0] == "#":
+                continue
+            fp.write(s + "\n")
+
         fp.close()
 
         break
