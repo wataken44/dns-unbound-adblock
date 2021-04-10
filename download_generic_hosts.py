@@ -16,6 +16,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) "}
 URLS = {
     "adaway": "https://adaway.org/hosts.txt",
     "warui": "https://warui.intaa.net/adhosts/hosts_lb.txt",
+    "logroid": "https://logroid.github.io/adaway-hosts/hosts.txt",
 }
 
 
