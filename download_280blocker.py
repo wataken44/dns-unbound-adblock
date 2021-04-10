@@ -39,7 +39,7 @@ def main():
             continue
 
         fp = open(OUTPUT, "w")
-        fp.write(res.read().decode("utf-8"))
+        fp.write(res.read().decode("utf_8_sig"))
         fp.close()
 
         break
