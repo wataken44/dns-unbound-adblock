@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" download_logroid.py
+""" download_adblock.py
 
 
 """
 
+import datetime
 import os
+import re
 import sys
 import urllib.request
-import re
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)) + "/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) "}
-WHITELIST_OUTPUT = "whitelist/logroid-hosts.txt"
-URL = "https://logroid.github.io/adaway-hosts/hosts_allow.txt"
+OUTPUT = "blacklist/adblock.txt"
+URL = "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
 
 
 def main():
     os.chdir(BASE_DIR)
+
+    now = datetime.datetime.now()
 
     req = urllib.request.Request(URL, headers=HEADERS)
     res = None
@@ -27,19 +30,22 @@ def main():
         res = urllib.request.urlopen(req)
     except Exception as e:
         print(e)
+        return
 
-    wfp = open(WHITELIST_OUTPUT, "w")
+    ptn = re.compile("^\|\|(.*)\^")
 
-    body = False
+    fp = open(OUTPUT, "w")
+
     for line in res:
-        s = line.decode("utf-8").strip()
-
-        if s == "" or s[0] == "#":
+        s = line.decode("utf_8_sig").strip()
+        if len(s) < 3:
             continue
 
-        wfp.write("%s\n" % s)
+        mo = ptn.search(s)
+        if mo:
+            fp.write(mo.group(1) + "\n")
 
-    wfp.close()
+    fp.close()
 
 
 if __name__ == "__main__":

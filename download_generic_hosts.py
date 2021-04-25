@@ -16,8 +16,22 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) "}
 URLS = {
     "adaway": "https://adaway.org/hosts.txt",
     "warui": "https://warui.intaa.net/adhosts/hosts_lb.txt",
-    "logroid": "https://logroid.github.io/adaway-hosts/hosts.txt",
+    "stevenblack": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
 }
+
+WHITELIST = [
+    "broadcasthost",
+    "ip6-allhosts",
+    "ip6-allnodes",
+    "ip6-allrouters",
+    "ip6-localhost",
+    "ip6-localnet",
+    "ip6-loopback",
+    "ip6-mcastprefix",
+    "local",
+    "localhost",
+    "localhost.localdomain",
+]
 
 
 def main():
@@ -35,12 +49,13 @@ def main():
             res = urllib.request.urlopen(req)
         except Exception as e:
             print(e)
+            continue
 
         fp = open(BASE_DIR + "blacklist/" + key + ".txt", "w")
 
         for line in res:
             s = line.decode("utf-8").strip()
-            if s == "" or s.find("localhost") >= 0 or s[0] == "#":
+            if s == "" or s[0] == "#" or (s in WHITELIST):
                 continue
 
             mo = hosts_ptn.search(s)
