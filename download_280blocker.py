@@ -26,7 +26,6 @@ def main():
     month = now.month
 
     for i in range(3):
-
         url = URL % (year, month)
         req = urllib.request.Request(url, headers=HEADERS)
         res = None
@@ -55,7 +54,7 @@ def prev_month(year, month):
     if month == 1:
         return year - 1, 12
     else:
-        return year, month
+        return year, month - 1
 
 
 if __name__ == "__main__":
