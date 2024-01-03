@@ -16,7 +16,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) "}
 URLS = {
     "adaway": "https://adaway.org/hosts.txt",
     "stevenblack": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-    "hagzi": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/hosts/pro.txt",
+    "hagezi": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/hosts/pro.txt",
 }
 
 WHITELIST = [
