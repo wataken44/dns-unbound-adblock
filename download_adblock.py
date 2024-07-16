@@ -37,7 +37,7 @@ def main():
             print(e)
             return
 
-        ptn = re.compile("^\|\|([^/$]*)\^$")
+        ptn = re.compile(r"^\|\|([^/$]*)\^$")
 
         fp = open(OUTPUT_DIR + name + ".txt", "w")
 
